@@ -21,5 +21,27 @@ namespace Muzej.BLL
         {
             return _employeesRepository.GetEmployee(id);
         }
+
+        public ICollection<Employee> GetEmployees(int count, int offset)
+        {
+            return _employeesRepository.GetEmployees(count, offset).ToList();
+        }
+        
+        //to do after REPO
+        public bool UpdateEmployee(Employee employee)
+        {
+            return true;
+        }
+        //to do after REPO
+        public int CreateEmployee(Employee employee)
+        {
+            return 0;
+        }
+        
+        //to do after REPO
+        public bool DeleteEmployee(int id)
+        {
+            return true;
+        }
     }
 }
