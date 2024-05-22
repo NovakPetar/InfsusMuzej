@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Muzej.BLL\Muzej.BLL.csproj" />
     <ProjectReference Include="..\Muzej.DAL\Muzej.DAL.csproj" />
     <ProjectReference Include="..\Muzej.Repository\Muzej.Repository.csproj" />
   </ItemGroup>

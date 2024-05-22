@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Muzej.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Muzej.Repository.Interfaces;
+using Muzej.SqlServerRepository;
 
 namespace Muzej.UI
 {
