@@ -21,6 +21,16 @@ namespace Muzej.UI
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Add session services
+            builder.Services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
+            builder.Services.AddSession(options =>
+            {
+                // Set session timeout
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             //define repository dependeny injection
             builder.Services.AddScoped<IRepositoryWrapper, SqlServerRepository.RepositoryWrapper>();
 
@@ -38,6 +48,9 @@ namespace Muzej.UI
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            // Enable session before UseEndpoints
+            app.UseSession();
 
             app.UseAuthorization();
 
