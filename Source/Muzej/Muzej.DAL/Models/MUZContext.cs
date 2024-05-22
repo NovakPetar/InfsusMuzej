@@ -24,6 +24,7 @@ namespace Muzej.DAL.Models
         public virtual DbSet<ReservationContent> ReservationContents { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Room> Rooms { get; set; } = null!;
+        public virtual DbSet<ShiftType> ShiftTypes { get; set; } = null!;
         public virtual DbSet<Task> Tasks { get; set; } = null!;
         public virtual DbSet<TicketCategory> TicketCategories { get; set; } = null!;
         public virtual DbSet<TicketLimit> TicketLimits { get; set; } = null!;
@@ -37,7 +38,7 @@ namespace Muzej.DAL.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=.;Database=MUZ;User Id=sa;Password=stipe;");
+                optionsBuilder.UseSqlServer("Server=localhost,1433;Database=MUZ;User Id=sa;Password=Infsus1234;TrustServerCertificate=True");
             }
         }
 
@@ -107,7 +108,7 @@ namespace Muzej.DAL.Models
             {
                 entity.ToTable("Reservation");
 
-                entity.HasIndex(e => e.ReservationNumber, "UQ__Reservat__FAA69AEBDFD322A4")
+                entity.HasIndex(e => e.ReservationNumber, "UQ__Reservat__FAA69AEB215F1A63")
                     .IsUnique();
 
                 entity.Property(e => e.ReservationId).HasColumnName("ReservationID");
@@ -126,7 +127,7 @@ namespace Muzej.DAL.Models
             modelBuilder.Entity<ReservationContent>(entity =>
             {
                 entity.HasKey(e => new { e.ReservationId, e.CategoryId })
-                    .HasName("PK__Reservat__167ECCA6E72D883C");
+                    .HasName("PK__Reservat__167ECCA6C89756A6");
 
                 entity.ToTable("ReservationContent");
 
@@ -140,13 +141,13 @@ namespace Muzej.DAL.Models
                     .WithMany(p => p.ReservationContents)
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Reservati__Categ__4222D4EF");
+                    .HasConstraintName("FK__Reservati__Categ__46E78A0C");
 
                 entity.HasOne(d => d.Reservation)
                     .WithMany(p => p.ReservationContents)
                     .HasForeignKey(d => d.ReservationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Reservati__Reser__412EB0B6");
+                    .HasConstraintName("FK__Reservati__Reser__45F365D3");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -167,6 +168,15 @@ namespace Muzej.DAL.Models
                 entity.Property(e => e.Name).HasMaxLength(100);
             });
 
+            modelBuilder.Entity<ShiftType>(entity =>
+            {
+                entity.ToTable("ShiftType");
+
+                entity.Property(e => e.ShiftTypeId).HasColumnName("ShiftTypeID");
+
+                entity.Property(e => e.ShiftTypeName).HasMaxLength(400);
+            });
+
             modelBuilder.Entity<Task>(entity =>
             {
                 entity.ToTable("Task");
@@ -177,12 +187,19 @@ namespace Muzej.DAL.Models
 
                 entity.Property(e => e.EndDateTime).HasColumnType("datetime");
 
+                entity.Property(e => e.ShiftTypeId).HasColumnName("ShiftTypeID");
+
                 entity.Property(e => e.StartDateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.Tasks)
                     .HasForeignKey(d => d.EmployeeId)
                     .HasConstraintName("FK_EmployeeID");
+
+                entity.HasOne(d => d.ShiftType)
+                    .WithMany(p => p.Tasks)
+                    .HasForeignKey(d => d.ShiftTypeId)
+                    .HasConstraintName("FK_ConstraintShiftType");
             });
 
             modelBuilder.Entity<TicketCategory>(entity =>
@@ -199,7 +216,7 @@ namespace Muzej.DAL.Models
             modelBuilder.Entity<TicketLimit>(entity =>
             {
                 entity.HasKey(e => e.Date)
-                    .HasName("PK__TicketLi__77387D06401E609A");
+                    .HasName("PK__TicketLi__77387D0634D56BE8");
 
                 entity.ToTable("TicketLimit");
 
@@ -247,13 +264,13 @@ namespace Muzej.DAL.Models
             modelBuilder.Entity<WorkingHour>(entity =>
             {
                 entity.HasKey(e => e.DayOfWeek)
-                    .HasName("PK__WorkingH__00D400DC7190C980");
+                    .HasName("PK__WorkingH__00D400DC55431962");
             });
 
             modelBuilder.Entity<WorkingHoursChange>(entity =>
             {
                 entity.HasKey(e => e.Date)
-                    .HasName("PK__WorkingH__77387D06F151B1F2");
+                    .HasName("PK__WorkingH__77387D06901AD4EE");
 
                 entity.ToTable("WorkingHoursChange");
 
