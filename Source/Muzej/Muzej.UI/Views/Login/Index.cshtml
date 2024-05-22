@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+
+<p>Select a role to simulate login:</p>
+
+<form asp-action="Login" asp-controller="Login" method="post">
+    <button type="submit" name="role" value=@Muzej.BLL.Roles.Visitor>@Muzej.BLL.Roles.Visitor</button>
+    <button type="submit" name="role" value=@Muzej.BLL.Roles.ContentManager>@Muzej.BLL.Roles.ContentManager</button>
+    <button type="submit" name="role" value=@Muzej.BLL.Roles.TimetableManager>@Muzej.BLL.Roles.TimetableManager</button>
+    <button type="submit" name="role" value=@Muzej.BLL.Roles.MarketingLead>@Muzej.BLL.Roles.MarketingLead</button>
+    <button type="submit" name="role" value=@Muzej.BLL.Roles.Administrator>@Muzej.BLL.Roles.Administrator</button>
+</form>

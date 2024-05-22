@@ -15,6 +15,7 @@ namespace Muzej.UI.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.Role = HttpContext.Session.GetString("Role");
             return View();
         }
 
