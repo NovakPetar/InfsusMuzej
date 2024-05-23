@@ -26,10 +26,9 @@ namespace Muzej.SqlServerRepository
             return job.Adapt<DomainObjects.Job>();
         }
 
-        public ICollection<DomainObjects.Job> GetJobsPerEmployee(int employeeId)
+        public ICollection<DomainObjects.Job> GetJobs()
         {
             return _context.Jobs
-                .Where((job => job.Employees.Where(employee => employee.EmployeeId == employeeId).Count() > 0))
                 .Adapt<ICollection<DomainObjects.Job>>()
                 .ToList();
         }

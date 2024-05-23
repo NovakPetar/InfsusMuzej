@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Muzej.DomainObjects
 {
-    public class Job
+    public partial class Job
     {
+        public int JobId { get; set; }
+        public string Name { get; set; } = null!;
     }
 }

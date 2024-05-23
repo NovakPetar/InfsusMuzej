@@ -16,9 +16,9 @@ public class JobsBLL
         return _jobsRepository.GetJob(id);
     }
 
-    public ICollection<Job> GetJobsForEmployee(int id)
+    public ICollection<Job> GetJobs()
     {
-        return _jobsRepository.GetJobsPerEmployee(id);
+        return _jobsRepository.GetJobs();
     }
     
     public bool UpdateJob(Job job)
