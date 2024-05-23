@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Muzej.BLL.Test", "Muzej.BLL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Muzej.SqlServerRepository.Test", "Muzej.SqlServerRepository.Test\Muzej.SqlServerRepository.Test.csproj", "{74E7B070-3E9F-44FC-9C1A-CB10937038D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Muzej.UI.Test", "Muzej.UI.Test\Muzej.UI.Test.csproj", "{2641C677-0F61-43D9-9679-AB698FD3B3C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Muzej.UI.Test", "Muzej.UI.Test\Muzej.UI.Test.csproj", "{2641C677-0F61-43D9-9679-AB698FD3B3C0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FAF14321-1F43-4244-84A9-57FD3E44E440}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +68,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{147BF6EA-0E3B-4B31-A12F-23C61D99316C} = {FAF14321-1F43-4244-84A9-57FD3E44E440}
+		{74E7B070-3E9F-44FC-9C1A-CB10937038D1} = {FAF14321-1F43-4244-84A9-57FD3E44E440}
+		{2641C677-0F61-43D9-9679-AB698FD3B3C0} = {FAF14321-1F43-4244-84A9-57FD3E44E440}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8DB44F0C-CFCE-417D-B49B-13E1A8289EC1}
