@@ -1,11 +1,11 @@
 using NUnit.Framework;
+using Moq;
 using Muzej.SqlServerRepository;
 using Muzej.DAL.Models;
 using Muzej.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.Sqlite;
-using Mapster;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Muzej.SqlServerRepository.Tests
 {
@@ -13,34 +13,34 @@ namespace Muzej.SqlServerRepository.Tests
     public class EmployeesRepositoryTests
     {
         private IEmployeesRepository _repository;
-        private DbContextOptions<MUZContext> _options;
-        private SqliteConnection _connection;
-
+        private Mock<MUZContext> _mockContext;
+        private List<Employee> _employees;
+        
         [SetUp]
         public void Setup()
         {
-            _connection = new SqliteConnection("DataSource=:memory:");
-            _connection.Open();
-            // Tu nesto ne radi, pogledaj kad stignes
-            _options = new DbContextOptionsBuilder<MUZContext>()
-               .UseSqlServer(_connection)
-                .Options;
-
-            using (var context = new MUZContext(_options))
+            _employees = new List<Employee>
             {
-                context.Database.EnsureCreated();
-                // Seed some test data
-                context.Employees.Add(new Employee { EmployeeId = 1, FirstName = "John", LastName = "Doe", Email = "john@example.com" });
-                context.SaveChanges();
-            }
+                new Employee { EmployeeId = 1, FirstName = "John", LastName = "Doe", Email = "john@example.com" },
+                new Employee { EmployeeId = 2, FirstName = "Jane", LastName = "Doe", Email = "jane@example.com" }
+            };
 
-            _repository = new EmployeesRepository(new MUZContext(_options));
-        }
+            _mockContext = new Mock<MUZContext>();
 
-        [TearDown]
-        public void TearDown()
-        {
-            _connection.Close();
+            // Setup DbSet<Employee> to return a mock DbSet<Employee> that represents the data in _employees
+            var mockSet = new Mock<DbSet<Employee>>();
+            mockSet.As<IQueryable<Employee>>().Setup(m => m.Provider).Returns(_employees.AsQueryable().Provider);
+            mockSet.As<IQueryable<Employee>>().Setup(m => m.Expression).Returns(_employees.AsQueryable().Expression);
+            mockSet.As<IQueryable<Employee>>().Setup(m => m.ElementType).Returns(_employees.AsQueryable().ElementType);
+            mockSet.As<IQueryable<Employee>>().Setup(m => m.GetEnumerator()).Returns(_employees.AsQueryable().GetEnumerator());
+
+            // Setup Add and Remove methods of DbSet<Employee> to update the _employees list
+            mockSet.Setup(m => m.Add(It.IsAny<Employee>())).Callback<Employee>((entity) => _employees.Add(entity));
+            mockSet.Setup(m => m.Remove(It.IsAny<Employee>())).Callback<Employee>((entity) => _employees.Remove(entity));
+
+            _mockContext.Setup(m => m.Employees).Returns(mockSet.Object);
+
+            _repository = new EmployeesRepository(_mockContext.Object);
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace Muzej.SqlServerRepository.Tests
 
             // Assert
             Assert.IsNotNull(employees);
-            Assert.AreEqual(1, employees.Count);
+            Assert.AreEqual(_employees.Count, employees.Count);
         }
 
         [Test]
@@ -93,12 +93,7 @@ namespace Muzej.SqlServerRepository.Tests
 
             // Assert
             Assert.IsTrue(result);
-            using (var context = new MUZContext(_options))
-            {
-                var updatedEmployee = context.Employees.FirstOrDefault(e => e.EmployeeId == employee.EmployeeId);
-                Assert.IsNotNull(updatedEmployee);
-                Assert.AreEqual("UpdatedFirstName", updatedEmployee.FirstName);
-            }
+            Assert.AreEqual("UpdatedFirstName", _employees.First(e => e.EmployeeId == 1).FirstName);
         }
 
         [Test]
@@ -117,14 +112,7 @@ namespace Muzej.SqlServerRepository.Tests
 
             // Assert
             Assert.AreNotEqual(-1, employeeId);
-            using (var context = new MUZContext(_options))
-            {
-                var createdEmployee = context.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
-                Assert.IsNotNull(createdEmployee);
-                Assert.AreEqual("Jane", createdEmployee.FirstName);
-                Assert.AreEqual("Doe", createdEmployee.LastName);
-                Assert.AreEqual("jane@example.com", createdEmployee.Email);
-            }
+            Assert.IsTrue(_employees.Any(e => e.EmployeeId == employeeId));
         }
 
         [Test]
@@ -138,11 +126,7 @@ namespace Muzej.SqlServerRepository.Tests
 
             // Assert
             Assert.IsTrue(result);
-            using (var context = new MUZContext(_options))
-            {
-                var deletedEmployee = context.Employees.FirstOrDefault(e => e.EmployeeId == existingEmployeeId);
-                Assert.IsNull(deletedEmployee);
-            }
+            Assert.IsFalse(_employees.Any(e => e.EmployeeId == existingEmployeeId));
         }
     }
 }

@@ -62,7 +62,8 @@ namespace Muzej.SqlServerRepository
                 return newEmployee.Entity.EmployeeId;
             }
             catch (Exception exception)
-            {
+            {   
+                Console.Write("Error : "+ exception.Message+ "\n");
                 return -1;
             }
         }

@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Castle.Core" Version="5.1.1" />
         <PackageReference Include="InMemory" Version="1.0.7">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -20,10 +21,19 @@
         <PackageReference Include="NUnit3TestAdapter" Version="4.2.1"/>
         <PackageReference Include="NUnit.Analyzers" Version="3.3.0"/>
         <PackageReference Include="coverlet.collector" Version="3.1.2"/>
+        <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.8" />
+        <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.linux" Version="1.1.14" />
+        <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.v110_xp" Version="1.1.15" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Muzej.SqlServerRepository\Muzej.SqlServerRepository.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Moq">
+        <HintPath>..\..\..\..\..\.nuget\packages\moq\4.20.70\lib\net6.0\Moq.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
