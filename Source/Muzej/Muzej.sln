@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Muzej.BLL.Test", "Muzej.BLL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Muzej.SqlServerRepository.Test", "Muzej.SqlServerRepository.Test\Muzej.SqlServerRepository.Test.csproj", "{74E7B070-3E9F-44FC-9C1A-CB10937038D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Muzej.UI.Test", "Muzej.UI.Test\Muzej.UI.Test.csproj", "{2641C677-0F61-43D9-9679-AB698FD3B3C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{74E7B070-3E9F-44FC-9C1A-CB10937038D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74E7B070-3E9F-44FC-9C1A-CB10937038D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74E7B070-3E9F-44FC-9C1A-CB10937038D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2641C677-0F61-43D9-9679-AB698FD3B3C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2641C677-0F61-43D9-9679-AB698FD3B3C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2641C677-0F61-43D9-9679-AB698FD3B3C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2641C677-0F61-43D9-9679-AB698FD3B3C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
