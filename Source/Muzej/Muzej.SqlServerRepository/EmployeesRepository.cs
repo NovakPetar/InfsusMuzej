@@ -87,5 +87,25 @@ namespace Muzej.SqlServerRepository
 
             return true;
         }
+
+        public ICollection<DomainObjects.Employee> SearchEmployeesByName(string searchQuery, int count, int offset)
+        {
+            return _context.Employees
+                .Where(e => (e.FirstName + " " + e.LastName).ToLower().Contains(searchQuery.ToLower()))
+                .Skip(offset)
+                .Take(count)
+                .Adapt<ICollection<DomainObjects.Employee>>()
+                .ToList();
+        }
+
+        public int GetEmployeesCount(string search)
+        {
+            if (string.IsNullOrEmpty(search))
+                return _context.Employees.Count();
+            return _context.Employees
+                .Where(e => (e.FirstName + " " + e.LastName).ToLower().Contains(search.ToLower()))
+                .Count();
+
+        }
     }
 }
