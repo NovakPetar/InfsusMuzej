@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Muzej.DAL", "Muzej.DAL\Muzej.DAL.csproj", "{F92DBC9F-14F6-4CCA-99B3-B43DB5C6AF60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Muzej.DAL", "Muzej.DAL\Muzej.DAL.csproj", "{F92DBC9F-14F6-4CCA-99B3-B43DB5C6AF60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Muzej.UI", "Muzej.UI\Muzej.UI.csproj", "{BBD587F0-B916-4057-A906-58D06148233F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Muzej.UI", "Muzej.UI\Muzej.UI.csproj", "{BBD587F0-B916-4057-A906-58D06148233F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Muzej.Repository", "Muzej.Repository\Muzej.Repository.csproj", "{81960DA3-AD54-4D62-A595-87F0F37DA85E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Muzej.Repository", "Muzej.Repository\Muzej.Repository.csproj", "{81960DA3-AD54-4D62-A595-87F0F37DA85E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Muzej.DomainObjects", "Muzej.DomainObjects\Muzej.DomainObjects.csproj", "{FE26CDAB-ED18-4F29-88BE-133147A83CEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Muzej.DomainObjects", "Muzej.DomainObjects\Muzej.DomainObjects.csproj", "{FE26CDAB-ED18-4F29-88BE-133147A83CEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Muzej.SqlServerRepository", "Muzej.SqlServerRepository\Muzej.SqlServerRepository.csproj", "{77896D76-4A24-47D9-9327-36615C989D94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Muzej.SqlServerRepository", "Muzej.SqlServerRepository\Muzej.SqlServerRepository.csproj", "{77896D76-4A24-47D9-9327-36615C989D94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Muzej.BLL", "Muzej.BLL\Muzej.BLL.csproj", "{45CEC3C8-C9FB-4DD5-937A-50A287410068}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Muzej.BLL", "Muzej.BLL\Muzej.BLL.csproj", "{45CEC3C8-C9FB-4DD5-937A-50A287410068}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Muzej.BLL.Test", "Muzej.BLL.Test\Muzej.BLL.Test.csproj", "{147BF6EA-0E3B-4B31-A12F-23C61D99316C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Muzej.BLL.Test", "Muzej.BLL.Test\Muzej.BLL.Test.csproj", "{147BF6EA-0E3B-4B31-A12F-23C61D99316C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Muzej.SqlServerRepository.Test", "Muzej.SqlServerRepository.Test\Muzej.SqlServerRepository.Test.csproj", "{74E7B070-3E9F-44FC-9C1A-CB10937038D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Muzej.SqlServerRepository.Test", "Muzej.SqlServerRepository.Test\Muzej.SqlServerRepository.Test.csproj", "{74E7B070-3E9F-44FC-9C1A-CB10937038D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +47,8 @@ Global
 		{77896D76-4A24-47D9-9327-36615C989D94}.Release|Any CPU.Build.0 = Release|Any CPU
 		{45CEC3C8-C9FB-4DD5-937A-50A287410068}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{45CEC3C8-C9FB-4DD5-937A-50A287410068}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45CEC3C8-C9FB-4DD5-937A-50A287410068}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45CEC3C8-C9FB-4DD5-937A-50A287410068}.Release|Any CPU.Build.0 = Release|Any CPU
 		{147BF6EA-0E3B-4B31-A12F-23C61D99316C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{147BF6EA-0E3B-4B31-A12F-23C61D99316C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{147BF6EA-0E3B-4B31-A12F-23C61D99316C}.Release|Any CPU.ActiveCfg = Release|Any CPU

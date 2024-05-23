@@ -1,6 +1,7 @@
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Muzej.BLL;
 using Muzej.DomainObjects;
 using Muzej.Repository.Interfaces;
 using Muzej.UI.Models;
@@ -21,10 +22,16 @@ public class EmployeeController : Controller
     public IActionResult Index()
     {
         ViewBag.Role = HttpContext.Session.GetString("Role");
-        List<Employee> employees = _repository
-            .Employees.GetEmployees(10, 0)
-            .ToList();
-        List<Job> jobs = _repository.Jobs.GetJobs().ToList();
+        if (ViewBag.Role != Roles.TimetableManager)
+        {
+            return RedirectToAction("UnauthorizedAccess", "Home");
+        }
+
+        var employeesBll = new EmployeesBLL(_repository);
+        var jobsBll = new JobsBLL(_repository);
+
+        ICollection<Employee> employees = employeesBll.GetEmployees(10, 0);
+        List<Job> jobs = jobsBll.GetJobs().ToList();
         var employeeViewModels = employees.Select(emp => new EmployeeViewModel
         {
             EmployeeId = emp.EmployeeId,
@@ -33,7 +40,7 @@ public class EmployeeController : Controller
             Email = emp.Email,
             JobName = jobs.FirstOrDefault(job => job.JobId == emp.JobId)?.Name ?? "Unknown"
         }).ToList();
-        ViewBag.Employees = employeeViewModels;
-        return View();
+
+        return View(employeeViewModels);
     }
 }
