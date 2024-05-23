@@ -10,5 +10,6 @@ namespace Muzej.Repository.Interfaces
     {
         IEmployeesRepository Employees { get; }
         IJobsRepository Jobs { get; }
+        ITasksRepository Tasks { get; }
     }
 }

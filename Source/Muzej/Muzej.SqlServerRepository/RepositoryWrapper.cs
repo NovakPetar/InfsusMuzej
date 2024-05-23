@@ -18,6 +18,7 @@ namespace Muzej.SqlServerRepository
 
         private IEmployeesRepository _employees;
         private IJobsRepository _jobs;
+        private ITasksRepository _tasks;
         public IEmployeesRepository Employees
         {
             get
@@ -39,6 +40,18 @@ namespace Muzej.SqlServerRepository
                     _jobs = new JobsRepository(_context);
                 }
                 return _jobs;
+            }
+        }
+        
+        public ITasksRepository Tasks
+        {
+            get
+            {
+                if (_tasks == null)
+                {
+                    _tasks = new TasksRepository(_context);
+                }
+                return _tasks;
             }
         }
     }

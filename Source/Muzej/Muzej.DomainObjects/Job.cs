@@ -10,5 +10,11 @@ namespace Muzej.DomainObjects
     {
         public int JobId { get; set; }
         public string Name { get; set; } = null!;
+        public ICollection<Employee> Employees { get; set; }
+        
+        public Job()
+        {
+            Employees = new List<Employee>();
+        }
     }
 }
