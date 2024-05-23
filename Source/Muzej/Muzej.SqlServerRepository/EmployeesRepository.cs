@@ -6,19 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Muzej.SqlServerRepository
 {
     public class EmployeesRepository : IEmployeesRepository
     {
-        private MUZContext context;
+        private MUZContext _context;
         public EmployeesRepository(MUZContext context)
         {
-            this.context = context;
+            this._context = context;
         }
         public Muzej.DomainObjects.Employee GetEmployee(int id)
         {
-            var employee = context.Employees.Where(x => x.EmployeeId == id).FirstOrDefault();
+            var employee = _context.Employees.Where(x => x.EmployeeId == id).FirstOrDefault();
 
             //mapiraj DAL.Models.Employee na DomainObjects.Employee
             //ili vrati null ako ne postoji zaposlenik s tim id
@@ -27,7 +28,63 @@ namespace Muzej.SqlServerRepository
 
         public ICollection<Muzej.DomainObjects.Employee> GetEmployees(int count, int offset)
         {
-            throw new NotImplementedException();
+            return _context.Employees
+                .Skip(offset)
+                .Take(count)
+                .Adapt<ICollection<DomainObjects.Employee>>()
+                .ToList();
+
+        }
+
+        public bool UpdateEmployee(DomainObjects.Employee employee)
+        {
+            try
+            {
+                _context.Employees.Update(employee.Adapt<Muzej.DAL.Models.Employee>());
+                _context.SaveChanges();
+            }
+            catch (Exception exception)
+            {
+                return false;
+            }
+
+            return true;
+
+        }
+
+        public int CreateEmployee(DomainObjects.Employee employee)
+        {
+            try
+            {
+                EntityEntry<Muzej.DAL.Models.Employee> newEmployee =
+                    _context.Employees.Add(employee.Adapt<Muzej.DAL.Models.Employee>());
+                _context.SaveChanges();
+                return newEmployee.Entity.EmployeeId;
+            }
+            catch (Exception exception)
+            {
+                return -1;
+            }
+        }
+        
+        public bool DeleteEmployee(int id)
+        {
+            try
+            {
+                var employee = _context.Employees.Where(x => x.EmployeeId == id).FirstOrDefault();
+                if (employee == null)
+                {
+                    return false;
+                }
+                _context.Employees.Remove(employee.Adapt<Muzej.DAL.Models.Employee>());
+                _context.SaveChanges();
+            }
+            catch (Exception exception)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

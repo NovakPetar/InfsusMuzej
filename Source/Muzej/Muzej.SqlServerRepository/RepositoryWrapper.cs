@@ -10,10 +10,10 @@ namespace Muzej.SqlServerRepository
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
-        private MUZContext context;
+        private MUZContext _context;
         public RepositoryWrapper(MUZContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         private IEmployeesRepository _employees;
@@ -24,7 +24,7 @@ namespace Muzej.SqlServerRepository
             {
                 if (_employees == null)
                 {
-                    _employees = new EmployeesRepository(context);
+                    _employees = new EmployeesRepository(_context);
                 }
                 return _employees;
             }
@@ -36,7 +36,7 @@ namespace Muzej.SqlServerRepository
             {
                 if (_jobs == null)
                 {
-                    _jobs = new JobsRepository(context);
+                    _jobs = new JobsRepository(_context);
                 }
                 return _jobs;
             }

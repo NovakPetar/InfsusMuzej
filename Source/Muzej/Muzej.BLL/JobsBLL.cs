@@ -10,31 +10,29 @@ public class JobsBLL
     {
         _jobsRepository = repositoryWrapper.Jobs;
     }
-    //TO DO
+
     public Job GetJob(int id)
     {
-        return null;
+        return _jobsRepository.GetJob(id);
     }
-    //TO DO
+
     public ICollection<Job> GetJobsForEmployee(int id)
     {
-        return null;
+        return _jobsRepository.GetJobsPerEmployee(id);
     }
-        
-    //TO DO
+    
     public bool UpdateJob(Job job)
     {
-        return true;
+        return _jobsRepository.UpdateJob(job);
     }
-    //TO DO
+
     public int CreateJob(Job job)
     {
-        return 0;
+        return _jobsRepository.CreateJob(job);
     }
-        
-    //TO DO
+
     public bool DeleteJob(int id)
     {
-        return true;
+        return _jobsRepository.DeleteJob(id);
     }
 }
