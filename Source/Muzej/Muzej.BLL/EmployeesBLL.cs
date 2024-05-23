@@ -40,5 +40,15 @@ namespace Muzej.BLL
         {
             return _employeesRepository.DeleteEmployee(id);
         }
+
+        public ICollection<Employee> SearchEmployeesByName(string searchQuery, int count, int offset)
+        {
+            return _employeesRepository.SearchEmployeesByName(searchQuery, count, offset);
+        }
+
+        public int GetEmployeesCount(string search)
+        {
+            return _employeesRepository.GetEmployeesCount(search);
+        }
     }
 }
