@@ -1,0 +1,47 @@
+﻿@model EmployeeCreateViewModel
+
+@{
+    ViewData["Title"] = "Add new employee";
+}
+
+<h2>Add new employee</h2>
+
+@if (Model.ValidationErrors.Count > 0)
+{
+    <ul>
+        @foreach (var error in Model.ValidationErrors)
+        {
+            <li style="color:red">@error</li>
+        }
+    </ul>
+}
+
+<form asp-action="Create" method="post">
+    <div>
+        <label asp-for="Employee.FirstName"></label>
+        <input asp-for="Employee.FirstName" />
+        <span asp-validation-for="Employee.FirstName" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Employee.LastName"></label>
+        <input asp-for="Employee.LastName" />
+        <span asp-validation-for="Employee.LastName" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Employee.Email"></label>
+        <input asp-for="Employee.Email" />
+        <span asp-validation-for="Employee.Email" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Employee.JobId"></label>
+        <select asp-for="Employee.JobId" asp-items="Model.JobList"></select>
+        <span asp-validation-for="Employee.JobId" class="text-danger"></span>
+    </div>
+    <button type="submit">Submit</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

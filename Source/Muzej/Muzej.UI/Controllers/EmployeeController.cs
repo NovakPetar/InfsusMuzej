@@ -1,5 +1,6 @@
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Muzej.BLL;
 using Muzej.DomainObjects;
@@ -68,5 +69,65 @@ public class EmployeeController : Controller
         };
 
         return View(viewModel);
+    }
+
+    public IActionResult Create()
+    {
+        ViewBag.Role = HttpContext.Session.GetString("Role");
+
+        //chek access rights
+        if (ViewBag.Role != Roles.TimetableManager)
+        {
+            return RedirectToAction("UnauthorizedAccess", "Home");
+        }
+
+        var model = new EmployeeCreateViewModel { JobList = prepareJobsDropdown() };
+        return View(model);
+    }
+
+    [HttpPost]
+    public IActionResult Create(EmployeeCreateViewModel model)
+    {
+        ViewBag.Role = HttpContext.Session.GetString("Role");
+
+        //chek access rights
+        if (ViewBag.Role != Roles.TimetableManager)
+        {
+            return RedirectToAction("UnauthorizedAccess", "Home");
+        }
+
+        var employeesBll = new EmployeesBLL(_repository);
+        try
+        {
+            int idCreated = employeesBll.CreateEmployee(model.Employee.Adapt<DomainObjects.Employee>());
+            return RedirectToAction("Success", new {id = idCreated });
+        }
+        catch (ValidationException ex)
+        {
+            model.ValidationErrors = ex.ValidationErrors;
+        }
+        catch
+        {
+            model.ValidationErrors = new List<string> { "Error occurred while adding employee" };
+        }
+
+        model.JobList = prepareJobsDropdown();
+        return View(model);
+    }
+
+    public IActionResult Success(int id)
+    {
+        ViewBag.EmployeeId = id;
+        return View();
+    }
+
+    private List<SelectListItem> prepareJobsDropdown()
+    {
+        var jobsBll = new JobsBLL(_repository);
+        return jobsBll.GetJobs().Select(job => new SelectListItem
+        {
+            Value = job.JobId.ToString(),
+            Text = job.Name
+        }).ToList();
     }
 }

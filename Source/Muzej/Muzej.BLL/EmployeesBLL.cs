@@ -33,6 +33,21 @@ namespace Muzej.BLL
         }
         public int CreateEmployee(Employee employee)
         {
+            //validation
+            List<string> validationErrors = new List<string>();
+            if (string.IsNullOrEmpty(employee?.FirstName))
+                validationErrors.Add("First name is required.");
+            if (string.IsNullOrEmpty(employee?.LastName))
+                validationErrors.Add("Last name is required.");
+            if (string.IsNullOrEmpty(employee?.Email))
+                validationErrors.Add("Email is required.");
+            if (employee?.JobId == null)
+                validationErrors.Add("Job id is required.");
+
+            if (validationErrors.Count() > 0)
+                throw new ValidationException(validationErrors);
+
+            //add employee
             return _employeesRepository.CreateEmployee(employee);
         }
         
