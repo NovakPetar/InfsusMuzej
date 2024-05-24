@@ -77,7 +77,7 @@ namespace Muzej.SqlServerRepository
                 {
                     return false;
                 }
-                _context.Employees.Remove(employee.Adapt<Muzej.DAL.Models.Employee>());
+                _context.Employees.Remove(employee);
                 _context.SaveChanges();
             }
             catch (Exception exception)

@@ -100,7 +100,7 @@ public class EmployeeController : Controller
         try
         {
             int idCreated = employeesBll.CreateEmployee(model.Employee.Adapt<DomainObjects.Employee>());
-            return RedirectToAction("Success", new {id = idCreated });
+            return RedirectToAction("Success", new {message = $"Employee with ID {idCreated} was created successfully." });
         }
         catch (ValidationException ex)
         {
@@ -115,10 +115,35 @@ public class EmployeeController : Controller
         return View(model);
     }
 
-    public IActionResult Success(int id)
+    public IActionResult Success(string message)
     {
-        ViewBag.EmployeeId = id;
+        ViewBag.SuccessMessage = message;
         return View();
+    }
+
+    [HttpPost]
+    public IActionResult Delete(int employeeId)
+    {
+        try
+        {
+            if (employeeId == 1) throw new Exception();
+            var employeesBll = new EmployeesBLL(_repository);
+            bool deleted = employeesBll.DeleteEmployee(employeeId);
+            if (deleted)
+            {
+                ViewBag.ErrorMessage = null;
+                return RedirectToAction("Success", new { message = $"Employee with ID {employeeId} was deleted successfully." });
+            } else
+            {
+                ViewBag.ErrorMessage = "Error when deleteing employee";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        catch (Exception)
+        {
+            ViewBag.ErrorMessage = "Error when deleteing employee";
+            return RedirectToAction(nameof(Index));
+        }
     }
 
     private List<SelectListItem> prepareJobsDropdown()
