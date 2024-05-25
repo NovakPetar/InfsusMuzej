@@ -19,6 +19,7 @@ namespace Muzej.SqlServerRepository
         private IEmployeesRepository _employees;
         private IJobsRepository _jobs;
         private ITasksRepository _tasks;
+        private IShiftTypesRepository _shiftTypes;
         public IEmployeesRepository Employees
         {
             get
@@ -52,6 +53,18 @@ namespace Muzej.SqlServerRepository
                     _tasks = new TasksRepository(_context);
                 }
                 return _tasks;
+            }
+        }
+
+        public IShiftTypesRepository ShiftTypes
+        {
+            get
+            {
+                if (_shiftTypes == null)
+                {
+                    _shiftTypes = new ShiftTypesRepository(_context);
+                }
+                return _shiftTypes;
             }
         }
     }

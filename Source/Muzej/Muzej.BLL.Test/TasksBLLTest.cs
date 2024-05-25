@@ -55,7 +55,7 @@ namespace Muzej.BLL.Tests
             var task = new DomainObjects.Task { TaskId = 1 };
             _mockTasksRepository.Setup(r => r.UpdateTask(task)).Returns(true);
             
-            var result = _tasksBLL.UpdateJob(task);
+            var result = _tasksBLL.UpdateTask(task);
             
             Assert.IsTrue(result);
         }
@@ -67,7 +67,7 @@ namespace Muzej.BLL.Tests
             var expectedTaskId = 1;
             _mockTasksRepository.Setup(r => r.CreateTask(task)).Returns(expectedTaskId);
             
-            var result = _tasksBLL.CreateJob(task);
+            var result = _tasksBLL.CreateTask(task);
             
             Assert.AreEqual(expectedTaskId, result);
         }
@@ -78,7 +78,7 @@ namespace Muzej.BLL.Tests
             var taskId = 1;
             _mockTasksRepository.Setup(r => r.DeleteTask(taskId)).Returns(true);
             
-            var result = _tasksBLL.DeleteJob(taskId);
+            var result = _tasksBLL.DeleteTask(taskId);
             
             Assert.IsTrue(result);
         }

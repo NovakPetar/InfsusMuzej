@@ -70,20 +70,13 @@ namespace Muzej.SqlServerRepository
         
         public bool DeleteEmployee(int id)
         {
-            try
-            {
-                var employee = _context.Employees.Where(x => x.EmployeeId == id).FirstOrDefault();
-                if (employee == null)
-                {
-                    return false;
-                }
-                _context.Employees.Remove(employee);
-                _context.SaveChanges();
-            }
-            catch (Exception exception)
+            var employee = _context.Employees.Where(x => x.EmployeeId == id).FirstOrDefault();
+            if (employee == null)
             {
                 return false;
             }
+            _context.Employees.Remove(employee);
+            _context.SaveChanges();
 
             return true;
         }

@@ -1,0 +1,115 @@
+﻿@model EmployeeEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Employee";
+}
+
+<h1>Edit Employee</h1>
+
+@if (Model.ValidationErrors.Count > 0)
+{
+    <ul>
+        @foreach (var error in Model.ValidationErrors)
+        {
+            <li style="color:red">@error</li>
+        }
+    </ul>
+}
+
+<form method="post" asp-controller="Employee" asp-action="Edit">
+    <input type="hidden" asp-for="EmployeeId" />
+    <div class="form-group">
+        <label asp-for="FirstName"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName"></label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="JobId">Job</label>
+        <select asp-for="JobId" class="form-control" asp-items="@(new SelectList(Model.Jobs, "JobId", "Name"))"></select>
+        <span asp-validation-for="JobId" class="text-danger"></span>
+    </div>
+
+    <h3>Tasks</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Start DateTime</th>
+                <th>End DateTime</th>
+                <th>Description</th>
+                <th>Shift Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Tasks.Count; i++)
+            {
+                <tr>
+                    <input type="hidden" asp-for="Tasks[i].TaskId" />
+                    <td><input asp-for="Tasks[i].StartDateTime" class="form-control" type="datetime-local" /></td>
+                    <td><input asp-for="Tasks[i].EndDateTime" class="form-control" type="datetime-local" /></td>
+                    <td><input asp-for="Tasks[i].Description" class="form-control" /></td>
+                    <td>
+                        <select asp-for="Tasks[i].ShiftTypeId" class="form-control" asp-items="@(new SelectList(Model.ShiftTypes, "ShiftTypeId", "ShiftTypeName"))"></select>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" onclick="removeTask(@i)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" onclick="addTask()">Add Task</button>
+
+    <button type="submit" class="btn btn-success">Save</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function addTask() {
+            var taskIndex = $('table tbody tr').length;
+            var newTask = `<tr>
+                        <input type="hidden" name="Tasks[${taskIndex}].TaskId" value="0" />
+                        <td><input name="Tasks[${taskIndex}].StartDateTime" class="form-control" type="datetime-local"/></td>
+                        <td><input name="Tasks[${taskIndex}].EndDateTime" class="form-control" type="datetime-local"/></td>
+                        <td><input name="Tasks[${taskIndex}].Description" class="form-control" /></td>
+                        <td>
+                            <select name="Tasks[${taskIndex}].ShiftTypeId" class="form-control">
+                            @foreach (var shiftType in Model.ShiftTypes)
+                            {
+                                <option value="@shiftType.ShiftTypeId">@shiftType.ShiftTypeName</option>
+                            }
+                            </select>
+                        </td>
+                        <td><button type="button" class="btn btn-danger" onclick="removeTask(${taskIndex})">Delete</button></td>
+                    </tr>`;
+            $('table tbody').append(newTask);
+        }
+
+        function removeTask(index) {
+            $('table tbody tr').eq(index).remove();
+            updateTaskIndexes();
+        }
+
+        function updateTaskIndexes() {
+            $('table tbody tr').each(function (i) {
+                $(this).find('input').each(function () {
+                    var name = $(this).attr('name');
+                    name = name.replace(/\[\d+\]/, `[${i}]`);
+                    $(this).attr('name', name);
+                });
+                $(this).find('button').attr('onclick', `removeTask(${i})`);
+            });
+        }
+    </script>
+}

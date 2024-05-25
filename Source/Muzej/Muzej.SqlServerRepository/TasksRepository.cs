@@ -69,7 +69,7 @@ public class TasksRepository : ITasksRepository
             {
                 return false;
             }
-            _context.Tasks.Remove(task.Adapt<Muzej.DAL.Models.Task>());
+            _context.Tasks.Remove(task);
             _context.SaveChanges();
         }
         catch (Exception exception)
