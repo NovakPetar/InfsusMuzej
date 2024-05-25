@@ -100,7 +100,7 @@ public class EmployeeController : Controller
         try
         {
             int idCreated = employeesBll.CreateEmployee(model.Employee.Adapt<DomainObjects.Employee>());
-            return RedirectToAction("Success", new {message = $"Employee with ID {idCreated} was created successfully." });
+            return RedirectToAction("ActionInfo", new {message = $"Employee with ID {idCreated} was created successfully.", successful = true });
         }
         catch (ValidationException ex)
         {
@@ -115,9 +115,11 @@ public class EmployeeController : Controller
         return View(model);
     }
 
-    public IActionResult Success(string message)
+    public IActionResult ActionInfo(string message, bool successful)
     {
-        ViewBag.SuccessMessage = message;
+        ViewBag.Role = HttpContext.Session.GetString("Role");
+        ViewBag.Successful = successful;
+        ViewBag.Message = message;
         return View();
     }
 
@@ -126,23 +128,19 @@ public class EmployeeController : Controller
     {
         try
         {
-            if (employeeId == 1) throw new Exception();
             var employeesBll = new EmployeesBLL(_repository);
             bool deleted = employeesBll.DeleteEmployee(employeeId);
             if (deleted)
             {
-                ViewBag.ErrorMessage = null;
-                return RedirectToAction("Success", new { message = $"Employee with ID {employeeId} was deleted successfully." });
+                return RedirectToAction("ActionInfo", new { message = $"Employee with ID {employeeId} was deleted successfully.", successful = true });
             } else
             {
-                ViewBag.ErrorMessage = "Error when deleteing employee";
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("ActionInfo", new { message = "Error when deleteing employee", successful = false });
             }
         }
         catch (Exception)
         {
-            ViewBag.ErrorMessage = "Error when deleteing employee";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("ActionInfo", new { message = "Error when deleteing employee", successful = false });
         }
     }
 
