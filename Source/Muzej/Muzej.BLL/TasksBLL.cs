@@ -64,10 +64,9 @@ public class TasksBLL
                 Console.WriteLine($"Email from:noreply@muzej.hr, to:{employee.Email}, content:\nDear {employee.FirstName + " " + employee.LastName},\n\nYour task with task id {deletedTask.TaskId} has been cancelled.\n\nBest regards!");
             }
             return true;
-        } else
-        {
-            return false;
-        }
+        } 
+        return false;
+
     }
 
     public List<string> ValidateTask(DomainObjects.Task t)

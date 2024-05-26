@@ -70,7 +70,15 @@ namespace Muzej.BLL.Tests
         [Test]
         public void CreateEmployee_ShouldReturnEmployeeId_WhenEmployeeIsCreated()
         {
-            var employee = new Employee { EmployeeId = 1 };
+            var employee = new Employee 
+            { 
+                EmployeeId = 1,
+                FirstName = "John",
+                LastName = "Doe",
+                Email = "john.doe@example.com",
+                JobId = 101
+            };
+
             var expectedEmployeeId = 1;
             _mockEmployeesRepository.Setup(r => r.CreateEmployee(employee)).Returns(expectedEmployeeId);
             

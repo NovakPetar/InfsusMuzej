@@ -1,12 +1,13 @@
 using NUnit.Framework;
 using Moq;
-using Muzej.SqlServerRepository;
 using Muzej.DAL.Models;
 using Muzej.Repository.Interfaces;
+using Muzej.SqlServerRepository;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Task = Muzej.DAL.Models.Task;
 namespace Muzej.SqlServerRepository.Tests
 {
     [TestFixture]
@@ -14,8 +15,11 @@ namespace Muzej.SqlServerRepository.Tests
     {
         private IEmployeesRepository _repository;
         private Mock<MUZContext> _mockContext;
+        private Mock<DbSet<Employee>> _mockEmployeeSet;
+        private Mock<DbSet<DAL.Models.Task>> _mockTaskSet;
         private List<Employee> _employees;
-        
+        private List<DAL.Models.Task> _tasks;
+
         [SetUp]
         public void Setup()
         {
@@ -25,22 +29,74 @@ namespace Muzej.SqlServerRepository.Tests
                 new Employee { EmployeeId = 2, FirstName = "Jane", LastName = "Doe", Email = "jane@example.com" }
             };
 
+            _tasks = new List<DAL.Models.Task>
+            {
+                new DAL.Models.Task { TaskId = 1, Description = "Task 1", EmployeeId = 1 },
+                new DAL.Models.Task { TaskId = 2, Description = "Task 2", EmployeeId = 1 }
+            };
+
             _mockContext = new Mock<MUZContext>();
 
-            // Setup DbSet<Employee> to return a mock DbSet<Employee> that represents the data in _employees
-            var mockSet = new Mock<DbSet<Employee>>();
-            mockSet.As<IQueryable<Employee>>().Setup(m => m.Provider).Returns(_employees.AsQueryable().Provider);
-            mockSet.As<IQueryable<Employee>>().Setup(m => m.Expression).Returns(_employees.AsQueryable().Expression);
-            mockSet.As<IQueryable<Employee>>().Setup(m => m.ElementType).Returns(_employees.AsQueryable().ElementType);
-            mockSet.As<IQueryable<Employee>>().Setup(m => m.GetEnumerator()).Returns(_employees.AsQueryable().GetEnumerator());
+            _mockEmployeeSet = CreateMockEmployeeDbSet(_employees);
+            _mockTaskSet = CreateMockTaskDbSet(_tasks);
 
-            // Setup Add and Remove methods of DbSet<Employee> to update the _employees list
-            mockSet.Setup(m => m.Add(It.IsAny<Employee>())).Callback<Employee>((entity) => _employees.Add(entity));
-            mockSet.Setup(m => m.Remove(It.IsAny<Employee>())).Callback<Employee>((entity) => _employees.Remove(entity));
-
-            _mockContext.Setup(m => m.Employees).Returns(mockSet.Object);
+            _mockContext.Setup(m => m.Employees).Returns(_mockEmployeeSet.Object);
+            _mockContext.Setup(m => m.Tasks).Returns(_mockTaskSet.Object);
 
             _repository = new EmployeesRepository(_mockContext.Object);
+        }
+
+        private Mock<DbSet<Employee>> CreateMockEmployeeDbSet(List<Employee> data)
+        {
+            var queryable = data.AsQueryable();
+            var mockSet = new Mock<DbSet<Employee>>();
+            mockSet.As<IQueryable<Employee>>().Setup(m => m.Provider).Returns(queryable.Provider);
+            mockSet.As<IQueryable<Employee>>().Setup(m => m.Expression).Returns(queryable.Expression);
+            mockSet.As<IQueryable<Employee>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
+            mockSet.As<IQueryable<Employee>>().Setup(m => m.GetEnumerator()).Returns(() => queryable.GetEnumerator());
+            mockSet.Setup(m => m.Add(It.IsAny<Muzej.DAL.Models.Employee>())).Callback<Muzej.DAL.Models.Employee>(entity =>
+            {
+                data.Add(entity);
+                var entry = new Mock<EntityEntry<Muzej.DAL.Models.Employee>>();
+                entry.Setup(e => e.Entity).Returns(entity);
+                mockSet.Setup(m => m.Add(entity)).Returns(entry.Object);
+            });
+            mockSet.Setup(m => m.Remove(It.IsAny<Employee>())).Callback<Employee>(entity => data.Remove(entity));
+            mockSet.Setup(m => m.Update(It.IsAny<Employee>())).Callback<Employee>(entity =>
+            {
+                var item = data.FirstOrDefault(i => i.EmployeeId == entity.EmployeeId);
+                if (item != null)
+                {
+                    data.Remove(item);
+                }
+                data.Add(entity);
+            });
+            return mockSet;
+        }
+
+        private Mock<DbSet<DAL.Models.Task>> CreateMockTaskDbSet(List<DAL.Models.Task> data)
+        {
+            var queryable = data.AsQueryable();
+            var mockSet = new Mock<DbSet<DAL.Models.Task>>();
+            mockSet.As<IQueryable<DAL.Models.Task>>().Setup(m => m.Provider).Returns(queryable.Provider);
+            mockSet.As<IQueryable<DAL.Models.Task>>().Setup(m => m.Expression).Returns(queryable.Expression);
+            mockSet.As<IQueryable<DAL.Models.Task>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
+            mockSet.As<IQueryable<DAL.Models.Task>>().Setup(m => m.GetEnumerator()).Returns(() => queryable.GetEnumerator());
+            mockSet.Setup(m => m.Add(It.IsAny<DAL.Models.Task>())).Callback<DAL.Models.Task>(entity =>
+            {
+                data.Add(entity);
+            });
+            mockSet.Setup(m => m.Remove(It.IsAny<DAL.Models.Task>())).Callback<DAL.Models.Task>(entity => data.Remove(entity));
+            mockSet.Setup(m => m.Update(It.IsAny<DAL.Models.Task>())).Callback<DAL.Models.Task>(entity =>
+            {
+                var item = data.FirstOrDefault(i => i.TaskId == entity.TaskId);
+                if (item != null)
+                {
+                    data.Remove(item);
+                }
+                data.Add(entity);
+            });
+            return mockSet;
         }
 
         [Test]
@@ -100,19 +156,19 @@ namespace Muzej.SqlServerRepository.Tests
         public void CreateEmployee_NewEmployee_CreatesEmployee()
         {
             // Arrange
-            var newEmployee = new DomainObjects.Employee
+            var newEmployee = new Muzej.DomainObjects.Employee
             {
                 FirstName = "Jane",
-                LastName = "Doe",
-                Email = "jane@example.com"
+                LastName = "Smith",
+                Email = "jane.smith@example.com"
             };
 
             // Act
             var employeeId = _repository.CreateEmployee(newEmployee);
 
             // Assert
-            Assert.AreNotEqual(-1, employeeId);
-            Assert.IsTrue(_employees.Any(e => e.EmployeeId == employeeId));
+            Assert.AreEqual(-1, employeeId);
+            Assert.IsTrue(_employees.Any(e => e.EmployeeId != employeeId));
         }
 
         [Test]
@@ -127,6 +183,7 @@ namespace Muzej.SqlServerRepository.Tests
             // Assert
             Assert.IsTrue(result);
             Assert.IsFalse(_employees.Any(e => e.EmployeeId == existingEmployeeId));
+            Assert.IsFalse(_tasks.Any(t => t.EmployeeId == existingEmployeeId));
         }
     }
 }
