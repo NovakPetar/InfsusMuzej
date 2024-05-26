@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Muzej.BLL;
 using Muzej.Repository.Interfaces;
 
 namespace Muzej.UI.Controllers;
@@ -32,26 +33,16 @@ public class TaskController : Controller
     }
     
     [HttpPost]
-    public IActionResult Delete(int id)
+    public IActionResult Delete(int taskId, int employeeId)
     {
-        var task = _repository.Tasks.GetTask(id);
-        if (task == null)
+        var tasksBll = new TasksBLL(_repository);
+
+        if (!tasksBll.DeleteTask(taskId))
         {
-            return NotFound();
+            return RedirectToAction("ActionInfo", "Employee", new { message = $"Error occurred while deleteing task.", successful = false });
         }
 
-        bool result = _repository.Tasks.DeleteTask(id);
-
-        if (result)
-        {
-            //Treba redirectat na index master detaila za taj employee sa uspjesnom poruku (onaj toast sa RPPP mislim da se tako zvalo)
-            return RedirectToAction("Index");
-        }
-        else
-        {
-            // Mozda ovako, ali mozda i da redirecta na master detail stranicu sa nekom porukom o neuspjenom brisanju ko na RPPP
-            return StatusCode(500, "Internal server error");
-        }
+        return RedirectToAction("Details", "Employee", new { id = employeeId });
     }
 
     [HttpPost]

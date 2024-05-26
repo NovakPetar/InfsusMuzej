@@ -62,7 +62,11 @@
                         <select asp-for="Tasks[i].ShiftTypeId" class="form-control" asp-items="@(new SelectList(Model.ShiftTypes, "ShiftTypeId", "ShiftTypeName"))"></select>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-danger" onclick="removeTask(@i)">Delete</button>
+                    <form method="post" asp-controller="Task" asp-action="Delete">
+                        <input type="hidden" name="taskId" value="@Model.Tasks[i].TaskId" />
+                        <input type="hidden" name="employeeId" value="@Model.EmployeeId" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
                     </td>
                 </tr>
             }

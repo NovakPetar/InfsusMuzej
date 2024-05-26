@@ -95,23 +95,6 @@ namespace Muzej.BLL
 
             UpdateEmployee(updatedEmployee);
 
-            //TODO: dohvati sve taskove od ovog zaposlenika
-            //za id-ove koje postoje u bazi, a ne u listi editedTasks -> izbrisi ih
-            var currentTasks = _tasksBll.GetTasksForEmployee(updatedEmployee.EmployeeId);
-            var idsToDelete = new List<int>();
-            foreach (var currentTask in currentTasks)
-            {
-                if (editedTasks.Where(x => x.TaskId == currentTask.TaskId).Count() == 0)
-                {
-                    idsToDelete.Add(currentTask.TaskId);
-                }
-            }
-
-            foreach (var id in idsToDelete)
-            {
-                _tasksBll.DeleteTask(id);
-            }
-
             foreach (var task in editedTasks)
             {
                 if (task.TaskId == 0)
