@@ -25,6 +25,11 @@ public class TasksBLL
         return _tasksRepository.UpdateTask(task);
     }
 
+    public bool NeedsUpdate(DomainObjects.Task task)
+    {
+        return _tasksRepository.NeedsUpdate(task);
+    }
+
     public int CreateTask(DomainObjects.Task task)
     {
         return _tasksRepository.CreateTask(task);
@@ -51,6 +56,11 @@ public class TasksBLL
             validationErrors.Add("StartDateTime must be earlier than EndDateTime.");
         if (t.ShiftTypeId == null)
             validationErrors.Add("Select shift type.");
+
+        // ne moze se dodati task koji je vec trebao zavrsiti
+        // i ne moze se azurirati task koji je vec trebao zavrsiti
+        if (DateTime.Now >= t.EndDateTime)
+            validationErrors.Add("Can't add or update task whoose EndDateTime is earlier than current time.");
 
         return validationErrors;
     }

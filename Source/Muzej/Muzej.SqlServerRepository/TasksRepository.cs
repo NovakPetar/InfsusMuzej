@@ -34,7 +34,11 @@ public class TasksRepository : ITasksRepository
     {
         try
         {
-            _context.Tasks.Update(task.Adapt<Muzej.DAL.Models.Task>());
+            var taskToUpdate = _context.Tasks.Where(x => x.TaskId == task.TaskId).FirstOrDefault();
+            taskToUpdate.Description = task.Description;
+            taskToUpdate.StartDateTime = task.StartDateTime;
+            taskToUpdate.EndDateTime = task.EndDateTime;
+            taskToUpdate.ShiftTypeId = task.ShiftTypeId;
             _context.SaveChanges();
         }
         catch (Exception exception)
@@ -67,7 +71,7 @@ public class TasksRepository : ITasksRepository
             var task = _context.Tasks.Where(x => x.TaskId == id).FirstOrDefault();
             if (task == null)
             {
-                return false;
+                return true;
             }
             _context.Tasks.Remove(task);
             _context.SaveChanges();
@@ -77,6 +81,23 @@ public class TasksRepository : ITasksRepository
             return false;
         }
 
+        return true;
+    }
+
+    public bool NeedsUpdate(Task task)
+    {
+        var oldTask = GetTask(task.TaskId);
+        if (task.TaskId != 0)
+        {
+            if (oldTask.Description.Equals(task.Description) &&
+                oldTask.ShiftTypeId == task.ShiftTypeId &&
+                oldTask.StartDateTime.Equals(task.StartDateTime) &&
+                oldTask.EndDateTime.Equals(task.EndDateTime))
+            {
+                return false;
+            }
+            return true;
+        }
         return true;
     }
 }

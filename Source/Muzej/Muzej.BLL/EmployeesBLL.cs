@@ -87,8 +87,10 @@ namespace Muzej.BLL
             // validate tasks
             foreach (var task in editedTasks)
             {
-                validationErrors.AddRange(_tasksBll.ValidateTask(task));
+                if (_tasksBll.NeedsUpdate(task))
+                    validationErrors.AddRange(_tasksBll.ValidateTask(task));
             }
+            
 
             if (validationErrors.Count() > 0)
                 throw new ValidationException(validationErrors);
@@ -102,7 +104,8 @@ namespace Muzej.BLL
                     _tasksBll.CreateTask(task);
                 } else
                 {
-                    _tasksBll.UpdateTask(task);
+                    if (_tasksBll.NeedsUpdate(task))
+                        _tasksBll.UpdateTask(task);
                 }
             }
         }
