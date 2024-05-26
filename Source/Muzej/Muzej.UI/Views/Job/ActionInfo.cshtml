@@ -1,0 +1,29 @@
+﻿@{
+    if (ViewBag.Successful)
+    {
+        ViewData["Title"] = "Action successful";
+    }
+    else
+    {
+        ViewData["Title"] = "Action failed";
+    }
+}
+
+@{
+    if (ViewBag.Successful)
+    {
+        <h2>Action successful</h2>
+    }
+    else
+    {
+        <h2 style="color:red">Action failed</h2>
+    }
+}
+
+<p>
+    @ViewBag.Message
+</p>
+
+<p>
+    <a asp-action="Index" asp-controller="Job">Back to Jobs List</a>
+</p>
