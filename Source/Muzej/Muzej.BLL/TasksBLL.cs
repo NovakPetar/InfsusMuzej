@@ -5,9 +5,11 @@ namespace Muzej.BLL;
 public class TasksBLL
 {
     private ITasksRepository _tasksRepository;
+    private IEmployeesRepository _employeesRepository;
     public TasksBLL(IRepositoryWrapper repositoryWrapper)
     {
         _tasksRepository = repositoryWrapper.Tasks;
+        _employeesRepository = repositoryWrapper.Employees;
     }
 
     public DomainObjects.Task GetTask(int id)
@@ -22,7 +24,15 @@ public class TasksBLL
     
     public bool UpdateTask(DomainObjects.Task task)
     {
-        return _tasksRepository.UpdateTask(task);
+        var success = _tasksRepository.UpdateTask(task);
+
+        if (success)
+        {
+            //notify employee
+            var employee = _employeesRepository.GetEmployee(task.EmployeeId ?? 0);
+            Console.WriteLine($"Email from:noreply@muzej.hr, to:{employee.Email}, content:\nDear {employee.FirstName + " " + employee.LastName},\n\nYour task with task id {task.TaskId} has been updated.\n{task}\n\nBest regards!");
+        }
+        return success;
     }
 
     public bool NeedsUpdate(DomainObjects.Task task)
@@ -32,12 +42,32 @@ public class TasksBLL
 
     public int CreateTask(DomainObjects.Task task)
     {
-        return _tasksRepository.CreateTask(task);
+        var idCreated = _tasksRepository.CreateTask(task);
+        if (idCreated > 0)
+        {
+            //notify employee
+            var employee = _employeesRepository.GetEmployee(task.EmployeeId ?? 0);
+            Console.WriteLine($"Email from:noreply@muzej.hr, to:{employee.Email}, content:\nDear {employee.FirstName + " " + employee.LastName},\n\nYou have been assigned a new task.\n{task}\n\nBest regards!");
+        }
+        return idCreated;
     }
 
     public bool DeleteTask(int id)
     {
-        return _tasksRepository.DeleteTask(id);
+        var deletedTask = _tasksRepository.DeleteTask(id);
+        if (deletedTask != null)
+        {
+            if (deletedTask.StartDateTime > DateTime.Now)
+            {
+                //notify employee
+                var employee = _employeesRepository.GetEmployee(deletedTask.EmployeeId ?? 0);
+                Console.WriteLine($"Email from:noreply@muzej.hr, to:{employee.Email}, content:\nDear {employee.FirstName + " " + employee.LastName},\n\nYour task with task id {deletedTask.TaskId} has been cancelled.\n\nBest regards!");
+            }
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 
     public List<string> ValidateTask(DomainObjects.Task t)

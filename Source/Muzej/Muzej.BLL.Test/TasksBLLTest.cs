@@ -76,7 +76,7 @@ namespace Muzej.BLL.Tests
         public void DeleteTask_ShouldReturnTrue_WhenTaskIsDeleted()
         {
             var taskId = 1;
-            _mockTasksRepository.Setup(r => r.DeleteTask(taskId)).Returns(true);
+            //_mockTasksRepository.Setup(r => r.DeleteTask(taskId)).Returns(true);
             
             var result = _tasksBLL.DeleteTask(taskId);
             

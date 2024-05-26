@@ -64,24 +64,17 @@ public class TasksRepository : ITasksRepository
         }
     }
 
-    public bool DeleteTask(int id)
+    public DomainObjects.Task DeleteTask(int id)
     {
-        try
+        var task = _context.Tasks.Where(x => x.TaskId == id).FirstOrDefault();
+        var taskToReturn = task?.Adapt<DomainObjects.Task>();
+        if (task != null)
         {
-            var task = _context.Tasks.Where(x => x.TaskId == id).FirstOrDefault();
-            if (task == null)
-            {
-                return true;
-            }
             _context.Tasks.Remove(task);
             _context.SaveChanges();
         }
-        catch (Exception exception)
-        {
-            return false;
-        }
 
-        return true;
+        return taskToReturn;
     }
 
     public bool NeedsUpdate(Task task)

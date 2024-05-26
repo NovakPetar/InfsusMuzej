@@ -9,5 +9,5 @@ public interface ITasksRepository
     public bool UpdateTask(DomainObjects.Task task);
     public bool NeedsUpdate(DomainObjects.Task task);
     public int CreateTask(DomainObjects.Task task);
-    public bool DeleteTask(int id);
+    public DomainObjects.Task DeleteTask(int id);
 }
