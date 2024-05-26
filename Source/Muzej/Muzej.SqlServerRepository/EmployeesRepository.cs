@@ -75,6 +75,13 @@ namespace Muzej.SqlServerRepository
             {
                 return false;
             }
+
+            var tasksToRemove = _context.Tasks.Where(x => x.EmployeeId == id);
+            foreach (var t in tasksToRemove)
+            {
+                _context.Tasks.Remove(t);
+            }
+                        
             _context.Employees.Remove(employee);
             _context.SaveChanges();
 

@@ -35,8 +35,13 @@ public class TaskController : Controller
     [HttpPost]
     public IActionResult Delete(int taskId, int employeeId)
     {
-        var tasksBll = new TasksBLL(_repository);
+        //chek access rights
+        if (HttpContext.Session.GetString("Role") != Roles.TimetableManager)
+        {
+            return RedirectToAction("UnauthorizedAccess", "Home");
+        }
 
+        var tasksBll = new TasksBLL(_repository);
         if (!tasksBll.DeleteTask(taskId))
         {
             return RedirectToAction("ActionInfo", "Employee", new { message = $"Error occurred while deleteing task.", successful = false });

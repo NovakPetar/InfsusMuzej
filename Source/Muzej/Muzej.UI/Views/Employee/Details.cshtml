@@ -6,6 +6,9 @@
 
 <h1 style="color:blue">Employee Details</h1>
 
+<p><a asp-controller="Employee" asp-action="Edit" asp-route-id="@Model.EmployeeId">Edit employee</a></p>
+<p><a asp-controller="Employee" asp-action="Index" >Back to employees list</a></p>
+
 <div>
     <h2>@Model.FirstName @Model.LastName</h2>
     <p>Email: <strong>@Model.Email</strong> </p>

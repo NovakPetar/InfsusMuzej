@@ -247,6 +247,11 @@ public class EmployeeController : Controller
     [HttpPost]
     public IActionResult Edit(EmployeeEditViewModel viewModel)
     {
+        //chek access rights
+        if (HttpContext.Session.GetString("Role") != Roles.TimetableManager)
+        {
+            return RedirectToAction("UnauthorizedAccess", "Home");
+        }
         var employeesBLL = new EmployeesBLL(_repository);
         var tasksBLL = new TasksBLL(_repository);
 
@@ -272,7 +277,7 @@ public class EmployeeController : Controller
         catch (Exception ex)
         {
             Console.WriteLine(ex);
-            viewModel.ValidationErrors = new List<string> { "Error occurred while adding employee" };
+            viewModel.ValidationErrors = new List<string> { "Error occurred while updating" };
         }
 
         var jobsBll = new JobsBLL(_repository);

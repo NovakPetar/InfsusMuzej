@@ -6,6 +6,9 @@
 
 <h1>Edit Employee</h1>
 
+<p><a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.EmployeeId">Cancel editing</a></p>
+<p><a asp-controller="Employee" asp-action="Index">Back to employees list</a></p>
+
 @if (Model.ValidationErrors.Count > 0)
 {
     <ul>
