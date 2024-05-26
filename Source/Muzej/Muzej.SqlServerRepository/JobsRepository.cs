@@ -65,20 +65,19 @@ namespace Muzej.SqlServerRepository
 
         public bool DeleteJob(int id)
         {
-            try
-            {
-                var job = _context.Jobs.Where(x => x.JobId == id).FirstOrDefault();
-                if (job == null)
-                {
-                    return false;
-                }
-                _context.Jobs.Remove(job);
-                _context.SaveChanges();
-            }
-            catch (Exception exception)
+            var list = _context.Employees.Where(x => x.JobId == id).ToList();
+            if (list.Count > 0)
             {
                 return false;
             }
+
+            var job = _context.Jobs.Where(x => x.JobId == id).FirstOrDefault();
+            if (job == null)
+            {
+                return false;
+            }
+            _context.Jobs.Remove(job);
+            _context.SaveChanges();
 
             return true;
         }

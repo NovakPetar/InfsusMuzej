@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Muzej.DomainObjects.Job>
+
+@{
+    ViewData["Title"] = "Job List";
+}
+
+<h1>Job List</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.JobId" class="btn btn-primary">Edit</a>
+                    <form method="post" asp-controller="Job" asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this job?');">
+                        <input type="hidden" name="id" value="@item.JobId" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
